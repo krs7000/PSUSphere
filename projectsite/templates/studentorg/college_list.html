@@ -1,0 +1,36 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Colleges | PSUSphere{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Colleges</h2>
+
+  <form method="get" class="row" style="gap: .5rem; margin: .75rem 0;">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search colleges..." />
+    <button type="submit">Search</button>
+  </form>
+
+  {% if page_obj.object_list %}
+    <ul>
+      {% for college in page_obj.object_list %}
+        <li>{{ college }}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="row" style="gap: 1rem; margin-top: 1rem;">
+      {% if page_obj.has_previous %}
+        <a href="?q={{ q }}&page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?q={{ q }}&page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+  {% else %}
+    <p class="muted">No colleges found.</p>
+  {% endif %}
+</div>
+{% endblock %}
