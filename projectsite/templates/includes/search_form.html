@@ -1,0 +1,11 @@
+<form method="get" class="card" style="margin-bottom: 12px">
+  <label for="q">Search:</label>
+  <input
+    id="q"
+    name="q"
+    type="text"
+    value="{{ request.GET.q }}"
+    placeholder="type keyword..."
+  />
+  <button type="submit">Search</button>
+</form>

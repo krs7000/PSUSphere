@@ -1,0 +1,89 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #111;
+  color: #eee;
+}
+a {
+  color: #8bd3ff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: #1f2a33;
+}
+.brand a {
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+}
+.nav a {
+  margin-left: 12px;
+}
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 14px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.table th,
+.table td {
+  border: 1px solid #2a2a2a;
+  padding: 8px;
+  text-align: left;
+}
+.table th {
+  background: #222;
+}
+
+input,
+select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #0f0f0f;
+  color: #eee;
+}
+button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #222;
+  color: #eee;
+  cursor: pointer;
+}
+button:hover {
+  background: #2b2b2b;
+}
+
+.pager {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.pager a {
+  padding: 6px 10px;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+.muted {
+  color: #aaa;
+}
