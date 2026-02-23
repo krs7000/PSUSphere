@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+<<<<<<< HEAD
+=======
+import os
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+<<<<<<< HEAD
 SECRET_KEY = 'django-insecure-xj%fja1)_)1ywcuy_)8#amn1!#6+)c@vl!3u1i)13avvi^ur@w'
+=======
+SECRET_KEY = 'django-insecure-&3gv)sfq9@462jf_1$sugx_b%u0$)pfk7+_!l0&wmbyk$3^rkq'
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,7 +63,11 @@ ROOT_URLCONF = 'projectsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [BASE_DIR / "templates"],
+=======
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,4 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+<<<<<<< HEAD
 STATICFILES_DIRS = [BASE_DIR / "static"]
+=======
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = (
+    BASE_DIR / 'static',
+)
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10

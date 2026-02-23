@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render
@@ -24,3 +25,13 @@ def college_list(request):
         "page_obj": page_obj,
         "q": q,
     })
+=======
+from django.shortcuts import render
+from django.views.generic.list import ListView
+from studentorg.models import Organization
+
+class HomePageView(ListView):
+    model = Organization
+    context_object_name = 'home'
+    template_name = "home.html"
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
