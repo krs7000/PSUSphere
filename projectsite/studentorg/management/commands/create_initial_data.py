@@ -1,8 +1,8 @@
-from django.core.management.base import BaseCommand
-from faker import Faker
-<<<<<<< HEAD
 import random
 from datetime import date, timedelta
+
+from django.core.management.base import BaseCommand
+from faker import Faker
 
 from studentorg.models import College, Program, Organization, Student, OrgMember
 
@@ -13,7 +13,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         fake = Faker("en_PH")
 
-        # You can adjust counts here
         college_count = 5
         program_count = 12
         org_count = 10
@@ -30,16 +29,10 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Initial data created successfully!"))
 
-    # -------------------------
-    # Create helper methods
-    # -------------------------
-
     def _create_colleges(self, fake: Faker, count: int):
         colleges = []
         for _ in range(count):
-            college = College.objects.create(
-                college_name=f"{fake.word().title()} College"
-            )
+            college = College.objects.create(college_name=f"{fake.word().title()} College")
             colleges.append(college)
 
         self.stdout.write(self.style.SUCCESS(f"Created {len(colleges)} colleges."))
@@ -65,7 +58,7 @@ class Command(BaseCommand):
 
             org = Organization.objects.create(
                 name=name,
-                college=random.choice(colleges),  # optional FK in your model; OK to set
+                college=random.choice(colleges),
                 description=fake.sentence(),
             )
             orgs.append(org)
@@ -76,7 +69,6 @@ class Command(BaseCommand):
     def _create_students(self, fake: Faker, count: int, programs):
         students = []
         for _ in range(count):
-            # student_id format: YYYY-X-NNNN (based on your PDF pattern)
             student_id = f"{random.randint(2020, 2025)}-{random.randint(1, 8)}-{random.randint(1000, 9999)}"
 
             student = Student.objects.create(
@@ -95,14 +87,11 @@ class Command(BaseCommand):
         created = 0
         attempts = 0
 
-        # We try a bit more than count to avoid duplicate pairs if you later add uniqueness
         while created < count and attempts < count * 3:
             attempts += 1
 
             student = random.choice(students)
             org = random.choice(orgs)
-
-            # random date within last 2 years
             days_back = random.randint(1, 730)
             joined = date.today() - timedelta(days=days_back)
 
@@ -114,67 +103,3 @@ class Command(BaseCommand):
             created += 1
 
         self.stdout.write(self.style.SUCCESS(f"Created {created} organization memberships."))
-=======
-from studentorg.models import College, Program, Organization, Student, OrgMember
-from studentorg.models import College, Program  # already imported in yours
-
-def handle(self, *args, **kwargs):
-    if College.objects.count() == 0 or Program.objects.count() == 0:
-        self.stdout.write(self.style.ERROR(
-            "Add at least 1 College and 1 Program first (Program is required for Student)."
-        ))
-        return
-
-    self.create_organization(10)
-    self.create_students(50)
-    self.create_membership(10)
-
-class Command(BaseCommand):
-    help = 'Create initial data for the application'
-
-    def handle(self, *args, **kwargs):
-        self.create_organization(10)
-        self.create_students(50)
-        self.create_membership(10)
-
-    def create_organization(self, count):
-        fake = Faker()
-
-        for _ in range(count):
-            words = [fake.word() for _ in range(2)] # two words
-            organization_name = ' '.join(words)
-            Organization.objects.create(
-                name=organization_name.title(),
-                college=College.objects.order_by('?').first(),
-                description=fake.sentence()
-            )
-
-        self.stdout.write(self.style.SUCCESS(
-            'Initial data for organization created successfully.'))
-
-    def create_students(self, count):
-        fake = Faker('en_PH')
-        for _ in range(count):
-            Student.objects.create(
-                student_id=f"{fake.random_int(2020,2025)}-{fake.random_int(1,8)}-"
-                           f"{fake.random_number(digits=4)}",
-                lastname=fake.last_name(),
-                firstname=fake.first_name(),
-                middlename=fake.last_name(),
-                program = Program.objects.order_by('?').first()
-            )
-        self.stdout.write(self.style.SUCCESS(
-            'Initial data for students created successfully.'))
-
-    def create_membership(self, count):
-        fake = Faker()
-        for _ in range(count):
-            OrgMember.objects.create(
-                student=Student.objects.order_by('?').first(),
-                organization=Organization.objects.order_by('?').first(),
-                date_joined=fake.date_between(
-                    start_date="-2y", end_date="today")
-            )
-        self.stdout.write(self.style.SUCCESS(
-            'Initial data for student organization created successfully.'))
->>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
