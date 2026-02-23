@@ -1,5 +1,9 @@
 from django.db import models
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -46,4 +50,8 @@ class Student(BaseModel):
 class OrgMember(BaseModel):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+<<<<<<< HEAD
     date_joined = models.DateField()
+=======
+    date_joined = models.DateField()
+>>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10

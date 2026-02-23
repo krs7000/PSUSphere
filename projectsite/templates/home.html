@@ -1,0 +1,33 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="card mb-4">
+  <div class="card-header">
+    Organizations
+    <div class="small text-muted">Data from Admin / Faker</div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      {% for org in home %}
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ org.name }}</h5>
+            <p class="card-text">{{ org.description }}</p>
+            <div class="small text-muted">
+              College: {{ org.college|default:"None" }}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>No organizations found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
