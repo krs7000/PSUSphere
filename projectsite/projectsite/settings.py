@@ -14,9 +14,7 @@ from pathlib import Path
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['psusphere.pythonanywhere.com', '127.0.0.1']
-
-import os
+ALLOWED_HOSTS = ["baterricho.pythonanywhere.com", "127.0.0.1"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,11 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xj%fja1)_)1ywcuy_)8#amn1!#6+)c@vl!3u1i)13avvi^ur@w'
 
 
-SECRET_KEY = 'django-insecure-&3gv)sfq9@462jf_1$sugx_b%u0$)pfk7+_!l0&wmbyk$3^rkq'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 
 # Application definition
 
