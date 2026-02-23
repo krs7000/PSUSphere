@@ -1,25 +1,13 @@
 # PSUSphere
 
-<<<<<<< HEAD
-ADjango-based student organization management system.
-
-## Authors
-
-Owen Christian Sanchez
-Richo Baterzal
-=======
-PSUSphere is a Django-based web application designed to manage
-student organizations, colleges, programs, and memberships.
+PSUSphere is a Django-based web application designed to manage student organizations, colleges, programs, and memberships.
 
 ## Features
 
-- Manage Colleges
-- Manage Programs
-- Manage Organizations
-- Manage Students
-- Manage Organization Memberships
+- Manage colleges, programs, organizations, and students
+- Track organization memberships
 - Admin dashboard with search and filtering
-- Faker-based automatic data generation
+- Faker-based automatic data generation for demos
 
 ## Technologies Used
 
@@ -30,13 +18,12 @@ student organizations, colleges, programs, and memberships.
 
 ## Installation
 
-1. Create a virtual environment
-2. Install dependencies:
-3. Run migrations:
-4. Run server:
+1. Create and activate a virtual environment.
+2. Install dependencies with `pip install -r requirements.txt`.
+3. Run migrations via `python manage.py migrate`.
+4. Start the development server with `python manage.py runserver`.
 
 ## Authors
 
-- Owen Sanchez
+- Owen Christian Sanchez
 - Richo Baterzal
->>>>>>> cc8f65327c20e8f3fb0485f68cda231dcbfe5b10
