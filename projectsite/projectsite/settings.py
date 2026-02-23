@@ -14,7 +14,6 @@ from pathlib import Path
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['psusphere.pythonanywhere.com', '127.0.0.1']
 
 import os
@@ -35,8 +34,6 @@ SECRET_KEY = 'django-insecure-&3gv)sfq9@462jf_1$sugx_b%u0$)pfk7+_!l0&wmbyk$3^rkq
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
