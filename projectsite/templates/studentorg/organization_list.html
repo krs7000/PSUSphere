@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Colleges | PSUSphere{% endblock %}
+{% block title %}Organizations | PSUSphere{% endblock %}
 
 {% block content %}
 <div class="page-inner">
   <div class="card">
-    <div class="card-header">
-      <div class="card-title">Colleges</div>
-    </div>
+    <div class="card-header"><div class="card-title">Organizations</div></div>
     <div class="card-body">
       <form method="get" class="form-inline mb-3">
-        <input class="form-control mr-2" type="text" name="q" value="{{ q }}" placeholder="Search colleges..." />
+        <input class="form-control mr-2" type="text" name="q" value="{{ q }}" placeholder="Search organizations..." />
         <button class="btn btn-primary" type="submit">Search</button>
       </form>
 
@@ -19,17 +17,17 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th>College Name</th>
-              <th>Created</th>
-              <th>Updated</th>
+              <th>Name</th>
+              <th>College</th>
+              <th>Description</th>
             </tr>
           </thead>
           <tbody>
-            {% for college in page_obj.object_list %}
+            {% for item in page_obj.object_list %}
             <tr>
-              <td>{{ college.college_name }}</td>
-              <td>{{ college.created_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ college.updated_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.college|default:"-" }}</td>
+              <td>{{ item.description|truncatechars:110 }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -37,7 +35,7 @@
       </div>
       {% include "includes/pagination.html" %}
       {% else %}
-      <p class="text-muted mb-0">No colleges found.</p>
+      <p class="text-muted mb-0">No organizations found.</p>
       {% endif %}
     </div>
   </div>

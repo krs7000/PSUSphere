@@ -10,7 +10,15 @@ from studentorg.models import College, Program, Organization, Student, OrgMember
 class Command(BaseCommand):
     help = "Create initial fake data for PSUSphere (college, program, org, students, memberships)"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--reset",
+            action="store_true",
+            help="Delete existing studentorg data first, then create fresh fake data.",
+        )
+
     def handle(self, *args, **options):
+        should_reset = options["reset"]
         fake = Faker("en_PH")
 
         college_count = 5
@@ -18,6 +26,30 @@ class Command(BaseCommand):
         org_count = 10
         student_count = 50
         membership_count = 120
+
+        if should_reset:
+            self.stdout.write(self.style.WARNING("Reset mode enabled. Deleting existing data..."))
+            OrgMember.objects.all().delete()
+            Student.objects.all().delete()
+            Organization.objects.all().delete()
+            Program.objects.all().delete()
+            College.objects.all().delete()
+        else:
+            existing_total = (
+                College.objects.count()
+                + Program.objects.count()
+                + Organization.objects.count()
+                + Student.objects.count()
+                + OrgMember.objects.count()
+            )
+            if existing_total > 0:
+                self.stdout.write(
+                    self.style.WARNING(
+                        "Existing data detected. Seed skipped to avoid duplicates. "
+                        "Use `python manage.py create_initial_data --reset` to recreate clean data."
+                    )
+                )
+                return
 
         self.stdout.write(self.style.WARNING("Creating initial data..."))
 
@@ -69,7 +101,7 @@ class Command(BaseCommand):
     def _create_students(self, fake: Faker, count: int, programs):
         students = []
         for _ in range(count):
-            student_id = f"{random.randint(2020, 2025)}-{random.randint(1, 8)}-{random.randint(1000, 9999)}"
+            student_id = fake.unique.bothify(text="20##-#-####")
 
             student = Student.objects.create(
                 student_id=student_id,
