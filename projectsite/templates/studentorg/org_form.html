@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Organization Form | PSUSphere{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">{% if object %}Update Organization{% else %}Add New Organization{% endif %}</div>
+          <div class="card-category">Page Subtitle</div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card-body">
+            <form class="action" method="post" novalidate>
+              {% csrf_token %}
+              {% include 'includes/form.html' %}
+              <div class="form-group col-md-12 col-sm-3">
+                <button type="submit" class="btn btn-primary btn-rounded">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

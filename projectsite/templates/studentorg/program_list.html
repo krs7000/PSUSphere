@@ -3,41 +3,5 @@
 {% block title %}Programs | PSUSphere{% endblock %}
 
 {% block content %}
-<div class="page-inner">
-  <div class="card">
-    <div class="card-header"><div class="card-title">Programs</div></div>
-    <div class="card-body">
-      <form method="get" class="form-inline mb-3">
-        <input class="form-control mr-2" type="text" name="q" value="{{ q }}" placeholder="Search programs..." />
-        <button class="btn btn-primary" type="submit">Search</button>
-      </form>
-
-      {% if page_obj.object_list %}
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>College</th>
-              <th>Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in page_obj.object_list %}
-            <tr>
-              <td>{{ item.prog_name }}</td>
-              <td>{{ item.college }}</td>
-              <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% include "includes/pagination.html" %}
-      {% else %}
-      <p class="text-muted mb-0">No programs found.</p>
-      {% endif %}
-    </div>
-  </div>
-</div>
+<div class="page-inner"><div class="row"><div class="col-md-12"><div class="card"><div class="card-header"><div class="card-title">List of Programs</div><div class="card-category">Page Subtitle</div></div><div class="card-body"><div class="row mb-3"><div class="col-md-6"><form class="navbar-left navbar-form nav-search mr-md-3" method="get"><div class="input-group"><input type="text" name="q" value="{{ q }}" placeholder="Search ..." class="form-control" /><div class="input-group-append"><span class="input-group-text"><i class="la la-search search-icon"></i></span></div></div></form></div><div class="col-md-6"><div class="pull-right"><a href="{% url 'program-add' %}" class="btn btn-success btn-rounded">Add Program</a></div></div></div><div class="table-responsive"><table class="table table-striped mt-3"><thead><tr><th>Program</th><th>College</th><th>Action</th></tr></thead><tbody>{% for object in object_list %}<tr><td>{{ object.prog_name }}</td><td>{{ object.college }}</td><td><a href="{% url 'program-update' object.id %}">Edit</a> <a href="{% url 'program-delete' object.id %}" class="text-danger">Delete</a></td></tr>{% empty %}<tr><td colspan="3">No Records Found</td></tr>{% endfor %}</tbody></table></div>{% include "includes/pagination.html" %}</div></div></div></div></div>
 {% endblock %}

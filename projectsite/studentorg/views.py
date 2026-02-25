@@ -1,103 +1,206 @@
-from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
-from .models import College, OrgMember, Organization, Program, Student
-
-
-def home(request):
-    context = {
-        "college_count": College.objects.count(),
-        "program_count": Program.objects.count(),
-        "organization_count": Organization.objects.count(),
-        "student_count": Student.objects.count(),
-        "orgmember_count": OrgMember.objects.count(),
-        "recent_organizations": Organization.objects.select_related("college").order_by("-created_at")[:6],
-        "recent_students": Student.objects.select_related("program", "program__college").order_by("-created_at")[:8],
-    }
-    return render(request, "studentorg/home.html", context)
+from .forms import CollegeForm, OrganizationForm, OrgMemberForm, ProgramForm, StudentForm
+from .models import College, Organization, OrgMember, Program, Student
 
 
-def _paginate(request, queryset, per_page=10):
-    paginator = Paginator(queryset, per_page)
-    page_number = request.GET.get("page")
-    return paginator.get_page(page_number)
+class HomePageView(TemplateView):
+    template_name = "studentorg/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "college_count": College.objects.count(),
+                "program_count": Program.objects.count(),
+                "organization_count": Organization.objects.count(),
+                "student_count": Student.objects.count(),
+                "orgmember_count": OrgMember.objects.count(),
+                "recent_organizations": Organization.objects.select_related("college").order_by("-created_at")[:6],
+                "recent_students": Student.objects.select_related("program", "program__college").order_by(
+                    "-created_at"
+                )[:8],
+            }
+        )
+        return context
 
 
-def college_list(request):
-    query = request.GET.get("q", "").strip()
-    colleges = College.objects.all().order_by("college_name")
+class BaseSearchListView(ListView):
+    paginate_by = 10
+    search_fields = ()
 
-    if query:
-        colleges = colleges.filter(college_name__icontains=query)
+    def get_search_query(self):
+        return self.request.GET.get("q", "").strip()
 
-    page_obj = _paginate(request, colleges)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.get_search_query()
+        if not q or not self.search_fields:
+            return queryset
 
-    return render(
-        request,
-        "studentorg/college_list.html",
-        {
-            "page_obj": page_obj,
-            "q": query,
-        },
-    )
+        query = Q()
+        for field in self.search_fields:
+            query |= Q(**{f"{field}__icontains": q})
+        return queryset.filter(query)
 
-
-def program_list(request):
-    query = request.GET.get("q", "").strip()
-    programs = Program.objects.select_related("college").all().order_by("prog_name")
-
-    if query:
-        programs = programs.filter(Q(prog_name__icontains=query) | Q(college__college_name__icontains=query))
-
-    page_obj = _paginate(request, programs)
-    return render(request, "studentorg/program_list.html", {"page_obj": page_obj, "q": query})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["q"] = self.get_search_query()
+        return context
 
 
-def organization_list(request):
-    query = request.GET.get("q", "").strip()
-    organizations = Organization.objects.select_related("college").all().order_by("name")
+class OrganizationList(BaseSearchListView):
+    model = Organization
+    template_name = "studentorg/org_list.html"
+    paginate_by = 5
+    search_fields = ("name", "college__college_name", "description")
 
-    if query:
-        organizations = organizations.filter(
-            Q(name__icontains=query)
-            | Q(description__icontains=query)
-            | Q(college__college_name__icontains=query)
+    def get_queryset(self):
+        return super().get_queryset().select_related("college").order_by("name")
+
+
+class OrganizationCreateView(CreateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = "studentorg/org_form.html"
+    success_url = reverse_lazy("organization-list")
+
+
+class OrganizationUpdateView(UpdateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = "studentorg/org_form.html"
+    success_url = reverse_lazy("organization-list")
+
+
+class OrganizationDeleteView(DeleteView):
+    model = Organization
+    template_name = "studentorg/org_del.html"
+    success_url = reverse_lazy("organization-list")
+
+
+class CollegeList(BaseSearchListView):
+    model = College
+    template_name = "studentorg/college_list.html"
+    paginate_by = 10
+    search_fields = ("college_name",)
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("college_name")
+
+
+class CollegeCreateView(CreateView):
+    model = College
+    form_class = CollegeForm
+    template_name = "studentorg/college_form.html"
+    success_url = reverse_lazy("college-list")
+
+
+class CollegeUpdateView(UpdateView):
+    model = College
+    form_class = CollegeForm
+    template_name = "studentorg/college_form.html"
+    success_url = reverse_lazy("college-list")
+
+
+class CollegeDeleteView(DeleteView):
+    model = College
+    template_name = "studentorg/college_del.html"
+    success_url = reverse_lazy("college-list")
+
+
+class ProgramList(BaseSearchListView):
+    model = Program
+    template_name = "studentorg/program_list.html"
+    paginate_by = 10
+    search_fields = ("prog_name", "college__college_name")
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("college").order_by("prog_name")
+
+
+class ProgramCreateView(CreateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = "studentorg/program_form.html"
+    success_url = reverse_lazy("program-list")
+
+
+class ProgramUpdateView(UpdateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = "studentorg/program_form.html"
+    success_url = reverse_lazy("program-list")
+
+
+class ProgramDeleteView(DeleteView):
+    model = Program
+    template_name = "studentorg/program_del.html"
+    success_url = reverse_lazy("program-list")
+
+
+class StudentList(BaseSearchListView):
+    model = Student
+    template_name = "studentorg/student_list.html"
+    paginate_by = 10
+    search_fields = ("student_id", "lastname", "firstname", "program__prog_name")
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("program", "program__college").order_by("lastname", "firstname")
+
+
+class StudentCreateView(CreateView):
+    model = Student
+    form_class = StudentForm
+    template_name = "studentorg/student_form.html"
+    success_url = reverse_lazy("student-list")
+
+
+class StudentUpdateView(UpdateView):
+    model = Student
+    form_class = StudentForm
+    template_name = "studentorg/student_form.html"
+    success_url = reverse_lazy("student-list")
+
+
+class StudentDeleteView(DeleteView):
+    model = Student
+    template_name = "studentorg/student_del.html"
+    success_url = reverse_lazy("student-list")
+
+
+class OrgMemberList(BaseSearchListView):
+    model = OrgMember
+    template_name = "studentorg/orgmember_list.html"
+    paginate_by = 10
+    search_fields = ("student__student_id", "student__lastname", "student__firstname", "organization__name")
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("student", "student__program", "student__program__college", "organization")
+            .order_by("-date_joined")
         )
 
-    page_obj = _paginate(request, organizations)
-    return render(request, "studentorg/organization_list.html", {"page_obj": page_obj, "q": query})
+
+class OrgMemberCreateView(CreateView):
+    model = OrgMember
+    form_class = OrgMemberForm
+    template_name = "studentorg/orgmember_form.html"
+    success_url = reverse_lazy("orgmember-list")
 
 
-def student_list(request):
-    query = request.GET.get("q", "").strip()
-    students = Student.objects.select_related("program", "program__college").all().order_by("lastname", "firstname")
-
-    if query:
-        students = students.filter(
-            Q(student_id__icontains=query)
-            | Q(lastname__icontains=query)
-            | Q(firstname__icontains=query)
-            | Q(program__prog_name__icontains=query)
-        )
-
-    page_obj = _paginate(request, students)
-    return render(request, "studentorg/student_list.html", {"page_obj": page_obj, "q": query})
+class OrgMemberUpdateView(UpdateView):
+    model = OrgMember
+    form_class = OrgMemberForm
+    template_name = "studentorg/orgmember_form.html"
+    success_url = reverse_lazy("orgmember-list")
 
 
-def orgmember_list(request):
-    query = request.GET.get("q", "").strip()
-    orgmembers = OrgMember.objects.select_related("student", "student__program", "student__program__college", "organization").all().order_by(
-        "-date_joined"
-    )
-
-    if query:
-        orgmembers = orgmembers.filter(
-            Q(student__student_id__icontains=query)
-            | Q(student__lastname__icontains=query)
-            | Q(student__firstname__icontains=query)
-            | Q(organization__name__icontains=query)
-        )
-
-    page_obj = _paginate(request, orgmembers)
-    return render(request, "studentorg/orgmember_list.html", {"page_obj": page_obj, "q": query})
+class OrgMemberDeleteView(DeleteView):
+    model = OrgMember
+    template_name = "studentorg/orgmember_del.html"
+    success_url = reverse_lazy("orgmember-list")
