@@ -57,34 +57,34 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item {% if request.path == '/colleges/' %}active{% endif %}">
-                    <a href="{% url 'college_list' %}">
-                        <i class="la la-university"></i>
-                        <p>Colleges</p>
-                    </a>
-                </li>
-                <li class="nav-item {% if request.path == '/orgmembers/' %}active{% endif %}">
-                    <a href="{% url 'orgmember_list' %}">
-                        <i class="la la-users"></i>
-                        <p>Org Members</p>
-                    </a>
-                </li>
-                <li class="nav-item {% if request.path == '/organizations/' %}active{% endif %}">
-                    <a href="{% url 'organization_list' %}">
+                <li class="nav-item {% if '/organization_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'organization-list' %}">
                         <i class="la la-sitemap"></i>
-                        <p>Organizations</p>
+                        <p>Organization</p>
                     </a>
                 </li>
-                <li class="nav-item {% if request.path == '/programs/' %}active{% endif %}">
-                    <a href="{% url 'program_list' %}">
-                        <i class="la la-book"></i>
-                        <p>Programs</p>
+                <li class="nav-item {% if '/orgmember_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'orgmember-list' %}">
+                        <i class="la la-users"></i>
+                        <p>Org. Members</p>
                     </a>
                 </li>
-                <li class="nav-item {% if request.path == '/students/' %}active{% endif %}">
-                    <a href="{% url 'student_list' %}">
+                <li class="nav-item {% if '/student_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'student-list' %}">
                         <i class="la la-user"></i>
-                        <p>Students</p>
+                        <p>Student</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/college_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'college-list' %}">
+                        <i class="la la-university"></i>
+                        <p>College</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/program_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'program-list' %}">
+                        <i class="la la-book"></i>
+                        <p>Program</p>
                     </a>
                 </li>
             </ul>
