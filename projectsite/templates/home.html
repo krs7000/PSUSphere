@@ -1,66 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard | PSUSphere{% endblock %}
+{% block title %}Home | PSUSphere{% endblock %}
 
 {% block content %}
-<div class="surface p-4 p-lg-5 mb-4">
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-    <div>
-      <p class="text-primary fw-semibold text-uppercase small mb-2">Student Organization Portal</p>
-      <h1 class="display-6 fw-bold mb-2">Welcome to PSUSphere</h1>
-      <p class="text-secondary mb-0">Manage colleges, members, organizations, programs, and students from one dashboard.</p>
-    </div>
-    <a class="btn btn-primary px-4" href="/admin/">Open Admin</a>
-  </div>
-</div>
-
-<div class="row g-3 mb-4">
-  <div class="col-6 col-lg-3">
-    <div class="surface p-3 h-100">
-      <p class="text-secondary small mb-1">Colleges</p>
-      <h3 class="mb-0">{{ home|length }}</h3>
-    </div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="surface p-3 h-100">
-      <p class="text-secondary small mb-1">Organizations</p>
-      <h3 class="mb-0">{{ home|length }}</h3>
-    </div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="surface p-3 h-100">
-      <p class="text-secondary small mb-1">Programs</p>
-      <h3 class="mb-0">{{ home|length }}</h3>
-    </div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="surface p-3 h-100">
-      <p class="text-secondary small mb-1">Students</p>
-      <h3 class="mb-0">{{ home|length }}</h3>
-    </div>
-  </div>
-</div>
-
-<div class="surface p-4">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <h2 class="h4 mb-0">Organizations</h2>
-    <a href="/admin/studentorg/organization/" class="btn btn-sm btn-outline-primary">Manage</a>
-  </div>
-
-  <div class="row g-3">
-    {% for org in home %}
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="border rounded-3 p-3 h-100 bg-white">
-        <h3 class="h5 mb-2">{{ org.name }}</h3>
-        <p class="text-secondary mb-2">{{ org.description|default:"No description available." }}</p>
-        <span class="badge text-bg-light border">College: {{ org.college|default:"None" }}</span>
+<div class="panel-header bg-primary-gradient">
+  <div class="page-inner py-5">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+      <div>
+        <h2 class="text-white pb-2 fw-bold">Welcome to PSUSphere</h2>
+        <h5 class="text-white op-7 mb-2">Simple site using Templates + Static + Includes.</h5>
+      </div>
+      <div class="ml-md-auto py-2 py-md-0">
+        <a href="/admin/" class="btn btn-white btn-border btn-round mr-2">Admin</a>
+        <a href="/admin/studentorg/college/" class="btn btn-secondary btn-round">View Colleges</a>
       </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-      <div class="alert alert-light border mb-0">No organizations found.</div>
+  </div>
+</div>
+
+<div class="page-inner mt--5">
+  <div class="row mt--2">
+    <div class="col-md-12">
+      <div class="card full-height">
+        <div class="card-header">
+          <div class="card-head-row">
+            <div class="card-title">Organizations</div>
+            <div class="card-tools">
+              <a href="/admin/studentorg/organization/" class="btn btn-info btn-border btn-round btn-sm mr-2">
+                <span class="btn-label"><i class="la la-pencil"></i></span>
+                Manage
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% for org in home %}
+            <div class="col-md-4">
+              <div class="card card-secondary mb-3">
+                <div class="card-body">
+                  <h4 class="mb-1">{{ org.name }}</h4>
+                  <p class="mb-2">{{ org.description|default:"No description available." }}</p>
+                  <small>College: {{ org.college|default:"None" }}</small>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="col-md-12">
+              <div class="alert alert-info mb-0">No organizations found.</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
-    {% endfor %}
   </div>
 </div>
 {% endblock %}
