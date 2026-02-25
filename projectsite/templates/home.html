@@ -1,33 +1,66 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Dashboard | PSUSphere{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Dashboard</h1>
-
-<div class="card mb-4">
-  <div class="card-header">
-    Organizations
-    <div class="small text-muted">Data from Admin / Faker</div>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      {% for org in home %}
-      <div class="col-md-4 mb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">{{ org.name }}</h5>
-            <p class="card-text">{{ org.description }}</p>
-            <div class="small text-muted">
-              College: {{ org.college|default:"None" }}
-            </div>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <p>No organizations found.</p>
-      {% endfor %}
+<div class="surface p-4 p-lg-5 mb-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <p class="text-primary fw-semibold text-uppercase small mb-2">Student Organization Portal</p>
+      <h1 class="display-6 fw-bold mb-2">Welcome to PSUSphere</h1>
+      <p class="text-secondary mb-0">Manage colleges, members, organizations, programs, and students from one dashboard.</p>
     </div>
+    <a class="btn btn-primary px-4" href="/admin/">Open Admin</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="surface p-3 h-100">
+      <p class="text-secondary small mb-1">Colleges</p>
+      <h3 class="mb-0">{{ home|length }}</h3>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="surface p-3 h-100">
+      <p class="text-secondary small mb-1">Organizations</p>
+      <h3 class="mb-0">{{ home|length }}</h3>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="surface p-3 h-100">
+      <p class="text-secondary small mb-1">Programs</p>
+      <h3 class="mb-0">{{ home|length }}</h3>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="surface p-3 h-100">
+      <p class="text-secondary small mb-1">Students</p>
+      <h3 class="mb-0">{{ home|length }}</h3>
+    </div>
+  </div>
+</div>
+
+<div class="surface p-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="h4 mb-0">Organizations</h2>
+    <a href="/admin/studentorg/organization/" class="btn btn-sm btn-outline-primary">Manage</a>
+  </div>
+
+  <div class="row g-3">
+    {% for org in home %}
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="border rounded-3 p-3 h-100 bg-white">
+        <h3 class="h5 mb-2">{{ org.name }}</h3>
+        <p class="text-secondary mb-2">{{ org.description|default:"No description available." }}</p>
+        <span class="badge text-bg-light border">College: {{ org.college|default:"None" }}</span>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-light border mb-0">No organizations found.</div>
+    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
