@@ -1,15 +1,129 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Home | PSUSphere{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>Welcome to PSUSphere</h2>
-  <p class="muted">Simple site using Templates + Static + Includes.</p>
+<div class="page-inner pt-4 pb-2">
+  <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+    <div>
+      <h2 class="pb-2 fw-bold text-dark">PSUSphere Dashboard</h2>
+      <h5 class="mb-2 text-dark">Live data from Django Admin is shown below.</h5>
+    </div>
+  </div>
+</div>
 
-  <ul>
-    <li><a href="{% url 'college_list' %}">View Colleges</a></li>
-    <li><a href="/admin/">Admin</a></li>
-  </ul>
+<div class="page-inner">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-2">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Colleges</p>
+            <h4 class="card-title">{{ college_count }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-2">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Programs</p>
+            <h4 class="card-title">{{ program_count }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-2">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Organizations</p>
+            <h4 class="card-title">{{ organization_count }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-2">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Students</p>
+            <h4 class="card-title">{{ student_count }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-2">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Org Members</p>
+            <h4 class="card-title">{{ orgmember_count }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Organizations</div>
+        </div>
+        <div class="card-body pb-0">
+          {% if recent_organizations %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>College</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for org in recent_organizations %}
+                <tr>
+                  <td>{{ org.name }}</td>
+                  <td>{{ org.college|default:"-" }}</td>
+                  <td>{{ org.description|truncatechars:80 }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-muted mb-0">No organizations found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Students</div>
+        </div>
+        <div class="card-body">
+          {% if recent_students %}
+          <ul class="list-group list-group-flush">
+            {% for student in recent_students %}
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <div>
+                <div class="font-weight-bold">{{ student.lastname }}, {{ student.firstname }}</div>
+                <small class="text-muted">{{ student.student_id }} | {{ student.program }}</small>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-muted mb-0">No students found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
