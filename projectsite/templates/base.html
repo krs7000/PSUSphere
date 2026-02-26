@@ -1,95 +1,76 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}PSUSphere{% endblock %}</title>
-    <link href="{% static 'sbadmin/css/styles.css' %}" rel="stylesheet" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>{% block title %}PSUSphere{% endblock %}</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="{% static 'css/ready.css' %}">
+  <link rel="stylesheet" href="{% static 'css/demo.css' %}">
 </head>
-<body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand ps-3" href="/">PSUSphere</a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" type="button">
-        &#9776;
-    </button>
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search..." disabled />
-            <button class="btn btn-primary" type="button" disabled>&#128269;</button>
+<body>
+  <div class="wrapper">
+    <div class="main-header">
+      <div class="logo-header">
+        <a href="/" class="logo">
+          PSUSphere
+        </a>
+        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+      </div>
+      <nav class="navbar navbar-header navbar-expand-lg">
+        <div class="container-fluid"></div>
+      </nav>
+    </div>
+
+    <div class="sidebar">
+      <div class="scrollbar-inner sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item active">
+            <a href="/">
+              <i class="la la-home"></i>
+              <p>Home</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/">
+              <i class="la la-cog"></i>
+              <p>Admin</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-panel">
+      {% block content %}
+      {% endblock %}
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="copyright ml-auto">
+            PSUSphere
+          </div>
         </div>
-    </form>
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">User</a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/admin/">Admin</a></li>
-            </ul>
-        </li>
-    </ul>
-</nav>
-
-<div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="/">
-                        <div class="sb-nav-link-icon">&#127968;</div>
-                        Dashboard
-                    </a>
-                    <div class="sb-sidenav-menu-heading">StudentOrg</div>
-                    <a class="nav-link" href="/admin/studentorg/college/">
-                        <div class="sb-nav-link-icon">&#127979;</div>
-                        Colleges
-                    </a>
-                    <a class="nav-link" href="/admin/studentorg/orgmember/">
-                        <div class="sb-nav-link-icon">&#129489;</div>
-                        Org Members
-                    </a>
-                    <a class="nav-link" href="/admin/studentorg/organization/">
-                        <div class="sb-nav-link-icon">&#128202;</div>
-                        Organizations
-                    </a>
-                    <a class="nav-link" href="/admin/studentorg/program/">
-                        <div class="sb-nav-link-icon">&#128218;</div>
-                        Programs
-                    </a>
-                    <a class="nav-link" href="/admin/studentorg/student/">
-                        <div class="sb-nav-link-icon">&#128100;</div>
-                        Students
-                    </a>
-                </div>
-            </div>
-            <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                Administrator
-            </div>
-        </nav>
+      </footer>
     </div>
-
-    <div id="layoutSidenav_content">
-        <main class="p-4">
-            {% block content %}{% endblock %}
-        </main>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; PSUSphere</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'sbadmin/js/scripts.js' %}"></script>
+  </div>
 </body>
+<script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/core/popper.min.js' %}"></script>
+<script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
+<script src="{% static 'js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
+<script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+<script src="{% static 'js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
+<script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<script src="{% static 'js/ready.min.js' %}"></script>
 </html>
