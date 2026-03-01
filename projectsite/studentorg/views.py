@@ -1,28 +1,31 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
+from django.utils import timezone
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CollegeForm, OrganizationForm, OrgMemberForm, ProgramForm, StudentForm
 from .models import College, Organization, OrgMember, Program, Student
 
 
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin, ListView):
+    model = Organization
+    context_object_name = "home"
     template_name = "studentorg/home.html"
+    login_url = "/admin/login/"
+
+    def get_queryset(self):
+        return Organization.objects.select_related("college").order_by("-created_at")[:8]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(
-            {
-                "college_count": College.objects.count(),
-                "program_count": Program.objects.count(),
-                "organization_count": Organization.objects.count(),
-                "student_count": Student.objects.count(),
-                "orgmember_count": OrgMember.objects.count(),
-                "recent_organizations": Organization.objects.select_related("college").order_by("-created_at")[:6],
-                "recent_students": Student.objects.select_related("program", "program__college").order_by(
-                    "-created_at"
-                )[:8],
-            }
+        context["total_students"] = Student.objects.count()
+        context["total_organizations"] = Organization.objects.count()
+        context["total_programs"] = Program.objects.count()
+
+        today = timezone.now().date()
+        context["students_joined_this_year"] = (
+            OrgMember.objects.filter(date_joined__year=today.year).values("student").distinct().count()
         )
         return context
 
@@ -48,6 +51,7 @@ class BaseSearchListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["q"] = self.get_search_query()
+        context["sort_by"] = self.request.GET.get("sort_by", "")
         return context
 
 
@@ -56,9 +60,10 @@ class OrganizationList(BaseSearchListView):
     template_name = "studentorg/org_list.html"
     paginate_by = 5
     search_fields = ("name", "college__college_name", "description")
+    ordering = ("college__college_name", "name")
 
     def get_queryset(self):
-        return super().get_queryset().select_related("college").order_by("name")
+        return super().get_queryset().select_related("college").order_by(*self.ordering)
 
 
 class OrganizationCreateView(CreateView):
@@ -117,8 +122,15 @@ class ProgramList(BaseSearchListView):
     paginate_by = 10
     search_fields = ("prog_name", "college__college_name")
 
+    def get_ordering(self):
+        allowed = ("prog_name", "college__college_name")
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "prog_name"
+
     def get_queryset(self):
-        return super().get_queryset().select_related("college").order_by("prog_name")
+        return super().get_queryset().select_related("college").order_by(self.get_ordering())
 
 
 class ProgramCreateView(CreateView):
@@ -177,12 +189,19 @@ class OrgMemberList(BaseSearchListView):
     paginate_by = 10
     search_fields = ("student__student_id", "student__lastname", "student__firstname", "organization__name")
 
+    def get_ordering(self):
+        allowed = ("student__lastname", "date_joined", "-date_joined")
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "-date_joined"
+
     def get_queryset(self):
         return (
             super()
             .get_queryset()
             .select_related("student", "student__program", "student__program__college", "organization")
-            .order_by("-date_joined")
+            .order_by(self.get_ordering())
         )
 
 
