@@ -10,6 +10,10 @@ db.sqlite3
 venv/
 .venv/
 env/
+projectsite/venv/
+
+# Collected static files
+staticfiles/
 
 # OS / IDE
 .vscode/
