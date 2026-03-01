@@ -2,63 +2,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>{% block title %}PSUSphere{% endblock %}</title>
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-  <link rel="stylesheet" href="{% static 'css/ready.css' %}">
-  <link rel="stylesheet" href="{% static 'css/demo.css' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{% block title %}PSUSphere{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
+    <link rel="stylesheet" href="{% static 'ready/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="{% static 'ready/assets/css/ready.css' %}">
+    <link rel="stylesheet" href="{% static 'ready/assets/css/demo.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <div class="wrapper">
+<div class="wrapper">
     <div class="main-header">
-      <div class="logo-header">
-        <a href="/" class="logo">
-          PSUSphere
-        </a>
-        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
-      </div>
-      <nav class="navbar navbar-header navbar-expand-lg">
-        <div class="container-fluid"></div>
-      </nav>
+        <div class="logo-header">
+            <a href="/" class="logo">PSUSphere</a>
+            <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+        </div>
+        <nav class="navbar navbar-header navbar-expand-lg">
+            <div class="container-fluid">
+                <form class="navbar-left navbar-form nav-search mr-md-3" action="" onsubmit="return false;">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search ..." class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-search search-icon"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+                            <img src="{% static 'ready/assets/img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+                            <span>Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a class="dropdown-item" href="/admin/">Django Admin</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </div>
 
     <div class="sidebar">
-      <div class="scrollbar-inner sidebar-wrapper">
-        <ul class="nav">
-          <li class="nav-item active">
-            <a href="/">
-              <i class="la la-home"></i>
-              <p>Home</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/admin/">
-              <i class="la la-cog"></i>
-              <p>Admin</p>
-            </a>
-          </li>
-        </ul>
-      </div>
+        <div class="scrollbar-inner sidebar-wrapper">
+            <ul class="nav">
+                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <a href="{% url 'home' %}">
+                        <i class="la la-dashboard"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/organization_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'organization-list' %}">
+                        <i class="la la-sitemap"></i>
+                        <p>Organization</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/orgmember_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'orgmember-list' %}">
+                        <i class="la la-users"></i>
+                        <p>Org. Members</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/student_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'student-list' %}">
+                        <i class="la la-user"></i>
+                        <p>Student</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/college_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'college-list' %}">
+                        <i class="la la-university"></i>
+                        <p>College</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if '/program_list/' in request.path %}active{% endif %}">
+                    <a href="{% url 'program-list' %}">
+                        <i class="la la-book"></i>
+                        <p>Program</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="main-panel">
-      {% block content %}
-      {% endblock %}
-
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="copyright ml-auto">
-            PSUSphere
-          </div>
+        <div class="content">
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
         </div>
-      </footer>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link" href="#">Privacy Policy</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Terms</a></li>
+                    </ul>
+                </nav>
+                <div class="copyright ml-auto">Copyright &copy; PSUSphere</div>
+            </div>
+        </footer>
     </div>
-  </div>
+</div>
+
+<script src="{% static 'ready/assets/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static 'ready/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script src="{% static 'ready/assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'ready/assets/js/core/bootstrap.min.js' %}"></script>
+<script src="{% static 'ready/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<script src="{% static 'ready/assets/js/ready.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 <script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
 <script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>

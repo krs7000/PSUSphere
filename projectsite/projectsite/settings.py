@@ -14,7 +14,7 @@ from pathlib import Path
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["psusphere.pythonanywhere.com", "127.0.0.1"]
+ALLOWED_HOSTS = ['.pythonanywhere.com', '127.0.0.1', 'localhost']
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,7 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = (

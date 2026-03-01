@@ -1,36 +1,45 @@
-﻿{% extends "base.html" %}
+{% extends "studentorg/org_list.html" %}
 
 {% block title %}Colleges | PSUSphere{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>Colleges</h2>
-
-  <form method="get" class="row" style="gap: .5rem; margin: .75rem 0;">
-    <input type="text" name="q" value="{{ q }}" placeholder="Search colleges..." />
-    <button type="submit">Search</button>
-  </form>
-
-  {% if page_obj.object_list %}
-    <ul>
-      {% for college in page_obj.object_list %}
-        <li>{{ college }}</li>
-      {% endfor %}
-    </ul>
-
-    <div class="row" style="gap: 1rem; margin-top: 1rem;">
-      {% if page_obj.has_previous %}
-        <a href="?q={{ q }}&page={{ page_obj.previous_page_number }}">Previous</a>
-      {% endif %}
-
-      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
-      {% if page_obj.has_next %}
-        <a href="?q={{ q }}&page={{ page_obj.next_page_number }}">Next</a>
-      {% endif %}
+<div class="page-inner">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">List of Colleges</div>
+          <div class="card-category">Page Subtitle</div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <form class="navbar-left navbar-form nav-search mr-md-3" method="get">
+                <div class="input-group">
+                  <input type="text" name="q" value="{{ q }}" placeholder="Search ..." class="form-control" />
+                  <div class="input-group-append"><span class="input-group-text"><i class="la la-search search-icon"></i></span></div>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6"><div class="pull-right"><a href="{% url 'college-add' %}" class="btn btn-success btn-rounded">Add College</a></div></div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped mt-3">
+              <thead><tr><th>College</th><th>Action</th></tr></thead>
+              <tbody>
+                {% for object in object_list %}
+                <tr>
+                  <td>{{ object.college_name }}</td>
+                  <td><a href="{% url 'college-update' object.id %}">Edit</a> <a href="{% url 'college-delete' object.id %}" class="text-danger">Delete</a></td>
+                </tr>
+                {% empty %}<tr><td colspan="2">No Records Found</td></tr>{% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% include "includes/pagination.html" %}
+        </div>
+      </div>
     </div>
-  {% else %}
-    <p class="muted">No colleges found.</p>
-  {% endif %}
+  </div>
 </div>
 {% endblock %}
