@@ -3,54 +3,115 @@
 {% block title %}Home | PSUSphere{% endblock %}
 
 {% block content %}
-<div class="panel-header bg-primary-gradient">
-  <div class="page-inner py-5">
-    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
-      <div>
-        <h2 class="text-white pb-2 fw-bold">Welcome to PSUSphere</h2>
-        <h5 class="text-white op-7 mb-2">Simple site using Templates + Static + Includes.</h5>
+<div class="page-inner pt-4 pb-2">
+  <h2 class="pb-2 fw-bold text-dark">PSUSphere Dashboard</h2>
+</div>
+
+<div class="page-inner">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card card-stats card-warning">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-5">
+              <div class="icon-big text-center"><i class="la la-users"></i></div>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <div class="numbers">
+                <p class="card-category">Students</p>
+                <h4 class="card-title">{{ total_students }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="ml-md-auto py-2 py-md-0">
-        <a href="/admin/" class="btn btn-white btn-border btn-round mr-2">Admin</a>
-        <a href="/admin/studentorg/college/" class="btn btn-secondary btn-round">View Colleges</a>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-stats card-success">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-5">
+              <div class="icon-big text-center"><i class="la la-calendar-check-o"></i></div>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <div class="numbers">
+                <p class="card-category">Joined This Year</p>
+                <h4 class="card-title">{{ students_joined_this_year }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-stats card-danger">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-5">
+              <div class="icon-big text-center"><i class="la la-sitemap"></i></div>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <div class="numbers">
+                <p class="card-category">Organizations</p>
+                <h4 class="card-title">{{ total_organizations }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-stats card-primary">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-5">
+              <div class="icon-big text-center"><i class="la la-book"></i></div>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <div class="numbers">
+                <p class="card-category">Programs</p>
+                <h4 class="card-title">{{ total_programs }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="page-inner mt--5">
-  <div class="row mt--2">
+  <div class="row">
     <div class="col-md-12">
-      <div class="card full-height">
+      <div class="card">
         <div class="card-header">
-          <div class="card-head-row">
-            <div class="card-title">Organizations</div>
-            <div class="card-tools">
-              <a href="/admin/studentorg/organization/" class="btn btn-info btn-border btn-round btn-sm mr-2">
-                <span class="btn-label"><i class="la la-pencil"></i></span>
-                Manage
-              </a>
-            </div>
-          </div>
-          <div class="card-body">Hello, World</div>
+          <div class="card-title">Recent Organizations</div>
         </div>
         <div class="card-body">
-          <div class="row">
-            {% for org in home %}
-            <div class="col-md-4">
-              <div class="card card-secondary mb-3">
-                <div class="card-body">
-                  <h4 class="mb-1">{{ org.name }}</h4>
-                  <p class="mb-2">{{ org.description|default:"No description available." }}</p>
-                  <small>College: {{ org.college|default:"None" }}</small>
-                </div>
-              </div>
-            </div>
-            {% empty %}
-            <div class="col-md-12">
-              <div class="alert alert-info mb-0">No organizations found.</div>
-            </div>
-            {% endfor %}
+          <div class="table-responsive">
+            <table class="table table-striped mt-3">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>College</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for org in home %}
+                <tr>
+                  <td>{{ org.name }}</td>
+                  <td>{{ org.college|default:"-" }}</td>
+                  <td>{{ org.description|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="text-center">No organizations found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

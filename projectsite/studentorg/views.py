@@ -11,7 +11,7 @@ from .models import College, Organization, OrgMember, Program, Student
 class HomePageView(LoginRequiredMixin, ListView):
     model = Organization
     context_object_name = "home"
-    template_name = "studentorg/home.html"
+    template_name = "home.html"
     login_url = "/admin/login/"
 
     def get_queryset(self):
@@ -57,13 +57,17 @@ class BaseSearchListView(ListView):
 
 class OrganizationList(BaseSearchListView):
     model = Organization
-    template_name = "studentorg/org_list.html"
+    context_object_name = "organization"
+    template_name = "org_list.html"
     paginate_by = 5
-    search_fields = ("name", "college__college_name", "description")
-    ordering = ("college__college_name", "name")
+    ordering = ["college__college_name", "name"]
 
     def get_queryset(self):
-        return super().get_queryset().select_related("college").order_by(*self.ordering)
+        qs = Organization.objects.select_related("college")
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        return qs.order_by(*self.ordering)
 
 
 class OrganizationCreateView(CreateView):
@@ -118,12 +122,13 @@ class CollegeDeleteView(DeleteView):
 
 class ProgramList(BaseSearchListView):
     model = Program
-    template_name = "studentorg/program_list.html"
-    paginate_by = 10
+    context_object_name = "program"
+    template_name = "program_list.html"
+    paginate_by = 5
     search_fields = ("prog_name", "college__college_name")
 
     def get_ordering(self):
-        allowed = ("prog_name", "college__college_name")
+        allowed = ["prog_name", "college__college_name"]
         sort_by = self.request.GET.get("sort_by")
         if sort_by in allowed:
             return sort_by
