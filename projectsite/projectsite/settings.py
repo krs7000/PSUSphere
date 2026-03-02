@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
-import socket
 from pathlib import Path
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
@@ -38,15 +37,30 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.github",
     "studentorg",
     "widget_tweaks",
 ]
+
+
+def module_available(module_name):
+    try:
+        __import__(module_name)
+        return True
+    except ImportError:
+        return False
+
+
+ALLAUTH_ENABLED = module_available("allauth")
+
+if ALLAUTH_ENABLED:
+    INSTALLED_APPS += [
+        "django.contrib.sites",
+        "allauth",
+        "allauth.account",
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.github",
+    ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -54,10 +68,15 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if ALLAUTH_ENABLED:
+    MIDDLEWARE.insert(
+        MIDDLEWARE.index("django.contrib.auth.middleware.AuthenticationMiddleware") + 1,
+        "allauth.account.middleware.AccountMiddleware",
+    )
 
 ROOT_URLCONF = "projectsite.urls"
 
@@ -132,23 +151,22 @@ STATICFILES_DIRS = (
     BASE_DIR / "static",
 )
 
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
-LOGIN_URL = "/accounts/login/"
+if ALLAUTH_ENABLED:
+    AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
+
+LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/login/"
+LOGOUT_REDIRECT_URL = "/"
 
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
+SITE_ID = int(os.environ.get("SITE_ID", "1"))
 
-SITE_ID = 2
-if "pythonanywhere" in socket.gethostname():
-    SITE_ID = 2
-else:
-    SITE_ID = 1
+if ALLAUTH_ENABLED:
+    LOGIN_URL = "/accounts/login/"
+    LOGOUT_REDIRECT_URL = "/accounts/login/"
+    ACCOUNT_LOGOUT_ON_GET = True
+    ACCOUNT_LOGIN_METHODS = {"username", "email"}
+    ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

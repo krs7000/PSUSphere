@@ -1,8 +1,11 @@
 from django.contrib import admin
-from django.urls import path
-from studentorg import views
+from django.conf import settings
+from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.HomePageView.as_view(), name="home"),
+    path("", include("studentorg.urls")),
 ]
+
+if settings.ALLAUTH_ENABLED:
+    urlpatterns.insert(1, path("accounts/", include("allauth.urls")))

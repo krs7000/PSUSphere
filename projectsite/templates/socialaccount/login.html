@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Sign In | PSUSphere{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Confirm Sign In</div>
+          <div class="card-category">Complete your social login</div>
+        </div>
+        <div class="card-body">
+          <p>You are about to sign in using a third-party account.</p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Continue</button>
+            <a href="{% url 'account_login' %}" class="btn btn-link">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

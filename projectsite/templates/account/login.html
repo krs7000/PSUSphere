@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+
+{% block title %}Login | PSUSphere{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Account Access</div>
+          <div class="card-category">Login or create an account</div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <h5>Sign In</h5>
+              <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-block mb-3">
+                Continue with Google
+              </a>
+              <form method="post" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_login">Username or Email</label>
+                  <input type="text" name="login" class="form-control" id="id_login" required>
+                </div>
+                <div class="form-group">
+                  <label for="id_password">Password</label>
+                  <input type="password" name="password" class="form-control" id="id_password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+              </form>
+            </div>
+            <div class="col-md-6 mb-4">
+              <h5>Sign Up</h5>
+              <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_username">Username</label>
+                  <input type="text" name="username" class="form-control" id="id_username" required>
+                </div>
+                <div class="form-group">
+                  <label for="id_email">Email</label>
+                  <input type="email" name="email" class="form-control" id="id_email" required>
+                </div>
+                <div class="form-group">
+                  <label for="id_password1">Password</label>
+                  <input type="password" name="password1" class="form-control" id="id_password1" required>
+                </div>
+                <div class="form-group">
+                  <label for="id_password2">Confirm Password</label>
+                  <input type="password" name="password2" class="form-control" id="id_password2" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
