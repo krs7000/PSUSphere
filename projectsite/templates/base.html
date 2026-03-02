@@ -1,4 +1,6 @@
 {% load static %}
+{% url 'account_login' as account_login_url %}
+{% url 'account_logout' as account_logout_url %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,9 +44,9 @@
                         <ul class="dropdown-menu dropdown-user">
                             {% if request.user.is_authenticated %}
                             <li><a class="dropdown-item" href="/admin/">Django Admin</a></li>
-                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{{ account_logout_url|default:'/admin/logout/' }}">Logout</a></li>
                             {% else %}
-                            <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ account_login_url|default:'/admin/login/' }}">Login</a></li>
                             {% endif %}
                         </ul>
                     </li>

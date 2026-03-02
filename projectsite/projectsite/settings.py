@@ -27,6 +27,18 @@ GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
 USE_SETTINGS_GOOGLE_APP = os.environ.get("USE_SETTINGS_GOOGLE_APP", "False") == "True"
 
+
+def module_available(module_name):
+    try:
+        __import__(module_name)
+        return True
+    except ImportError:
+        return False
+
+
+ALLAUTH_ENABLED = module_available("allauth")
+WIDGET_TWEAKS_ENABLED = module_available("widget_tweaks")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,15 +61,21 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.github",
     "studentorg",
-    "widget_tweaks",
 ]
+
+if WIDGET_TWEAKS_ENABLED:
+    INSTALLED_APPS.append("widget_tweaks")
+
+if ALLAUTH_ENABLED:
+    INSTALLED_APPS += [
+        "django.contrib.sites",
+        "allauth",
+        "allauth.account",
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.github",
+    ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -65,10 +83,15 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if ALLAUTH_ENABLED:
+    MIDDLEWARE.insert(
+        MIDDLEWARE.index("django.contrib.auth.middleware.AuthenticationMiddleware") + 1,
+        "allauth.account.middleware.AccountMiddleware",
+    )
 
 ROOT_URLCONF = "projectsite.urls"
 
@@ -144,31 +167,35 @@ STATICFILES_DIRS = (
 )
 
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
-AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
+if ALLAUTH_ENABLED:
+    AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_URL = "/accounts/login/"
+LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/login/"
+LOGOUT_REDIRECT_URL = "/"
 
 SITE_ID = int(os.environ.get("SITE_ID", "1"))
 
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_LOGOUT_REDIRECT_URL = "/"
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
+if ALLAUTH_ENABLED:
+    LOGIN_URL = "/accounts/login/"
+    LOGOUT_REDIRECT_URL = "/accounts/login/"
+    ACCOUNT_LOGOUT_ON_GET = True
+    ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+    ACCOUNT_LOGIN_METHODS = {"username", "email"}
+    ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
 
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
+    SOCIALACCOUNT_PROVIDERS = {
+        "google": {
+            "SCOPE": ["profile", "email"],
+            "AUTH_PARAMS": {"access_type": "online"},
+        }
     }
-}
 
-if USE_SETTINGS_GOOGLE_APP and GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET:
-    SOCIALACCOUNT_PROVIDERS["google"]["APP"] = {
-        "client_id": GOOGLE_OAUTH_CLIENT_ID,
-        "secret": GOOGLE_OAUTH_CLIENT_SECRET,
-        "key": "",
-    }
+    if USE_SETTINGS_GOOGLE_APP and GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET:
+        SOCIALACCOUNT_PROVIDERS["google"]["APP"] = {
+            "client_id": GOOGLE_OAUTH_CLIENT_ID,
+            "secret": GOOGLE_OAUTH_CLIENT_SECRET,
+            "key": "",
+        }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
