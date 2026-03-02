@@ -37,10 +37,15 @@
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                             <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
-                            <span>{{ request.user.username }}</span>
+                            <span>{% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Guest{% endif %}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
+                            {% if request.user.is_authenticated %}
                             <li><a class="dropdown-item" href="/admin/">Django Admin</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 </ul>

@@ -12,10 +12,10 @@
           <div class="card-category">Complete your social login</div>
         </div>
         <div class="card-body">
-          <p>You are about to sign in using a third-party account.</p>
+          <p>You are about to sign in using your <strong>{{ provider.name }}</strong> account.</p>
           <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Continue</button>
+            <button type="submit" class="btn btn-primary">Continue with {{ provider.name }}</button>
             <a href="{% url 'account_login' %}" class="btn btn-link">Cancel</a>
           </form>
         </div>
