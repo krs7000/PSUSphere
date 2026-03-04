@@ -11,15 +11,16 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 import socket
+import sys
 from pathlib import Path
 
 DEBUG_ENV = os.environ.get("DEBUG")
-IS_PYTHONANYWHERE = "pythonanywhere" in socket.gethostname().lower()
-if IS_PYTHONANYWHERE:
-    DEBUG = bool(DEBUG_ENV and DEBUG_ENV.strip().lower() in {"1", "true", "yes", "on"})
+RUNNING_DEV_SERVER = any(arg.startswith("runserver") for arg in sys.argv)
+if DEBUG_ENV is None:
+    # Safe default: production stays False, local runserver stays True.
+    DEBUG = RUNNING_DEV_SERVER
 else:
-    # Always keep debug on for local development so admin static assets load.
-    DEBUG = True
+    DEBUG = DEBUG_ENV.strip().lower() in {"1", "true", "yes", "on"}
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -32,7 +33,12 @@ ALLOWED_HOSTS = [
 
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
-USE_SETTINGS_GOOGLE_APP = os.environ.get("USE_SETTINGS_GOOGLE_APP", "False") == "True"
+USE_SETTINGS_GOOGLE_APP_ENV = os.environ.get("USE_SETTINGS_GOOGLE_APP")
+if USE_SETTINGS_GOOGLE_APP_ENV is None:
+    # If credentials are provided via env, use them automatically.
+    USE_SETTINGS_GOOGLE_APP = bool(GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET)
+else:
+    USE_SETTINGS_GOOGLE_APP = USE_SETTINGS_GOOGLE_APP_ENV.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def module_available(module_name):
