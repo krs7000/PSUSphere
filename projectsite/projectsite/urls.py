@@ -11,6 +11,7 @@ urlpatterns = [
 if settings.ALLAUTH_ENABLED:
     from allauth.socialaccount.models import SocialApp
     from allauth.socialaccount.providers.google.views import oauth2_callback, oauth2_login
+    from allauth.socialaccount.views import signup as social_signup
 
     def social_unavailable(request, status_code=503):
         return render(request, "socialaccount/unavailable.html", status=status_code)
@@ -31,9 +32,17 @@ if settings.ALLAUTH_ENABLED:
         except SocialApp.DoesNotExist:
             return social_unavailable(request, status_code=503)
 
+    def social_signup_entry(request, *args, **kwargs):
+        # Avoid hard 500 pages if social signup state has expired or is invalid.
+        try:
+            return social_signup(request, *args, **kwargs)
+        except Exception:
+            return redirect("/accounts/login/")
+
     urlpatterns.insert(1, path("accounts/google/login/", google_login_entry))
     urlpatterns.insert(1, path("accounts/google/login/callback/", google_callback_entry))
-    urlpatterns.insert(3, path("accounts/", include("allauth.urls")))
+    urlpatterns.insert(3, path("accounts/3rdparty/signup/", social_signup_entry))
+    urlpatterns.insert(4, path("accounts/", include("allauth.urls")))
 else:
     def social_unavailable(request):
         return render(request, "socialaccount/unavailable.html", status=503)
