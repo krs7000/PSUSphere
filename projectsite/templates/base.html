@@ -74,7 +74,7 @@
                                     </a>
                                     <a href="#">
                                         <div class="notif-img">
-                                            <img src="{% static 'img/profile2.jpg' %}" alt="img profile">
+                                            <img src="{% static 'ready/assets/img/profile2.jpg' %}" onerror="this.onerror=null;this.src='{% static 'img/profile2.jpg' %}';" alt="img profile">
                                         </div>
                                         <div class="notif-content">
                                             <span class="block">Reza send messages to you</span>
@@ -97,14 +97,14 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a id="profileDropdownToggle" class="dropdown-toggle profile-pic" href="#" aria-expanded="false">
-                            <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+                            <img src="{% static 'ready/assets/img/profile.jpg' %}" onerror="this.onerror=null;this.src='{% static 'img/profile.jpg' %}';" alt="user-img" width="36" class="img-circle">
                             <span>{% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Guest{% endif %}</span>
                         </a>
                         <ul id="profileDropdownMenu" class="dropdown-menu dropdown-user">
                             <li>
                                 <div class="user-box">
                                     <div class="u-img">
-                                        <img src="{% static 'img/profile.jpg' %}" alt="user">
+                                        <img src="{% static 'ready/assets/img/profile.jpg' %}" onerror="this.onerror=null;this.src='{% static 'img/profile.jpg' %}';" alt="user">
                                     </div>
                                     <div class="u-text">
                                         <h4>{% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Guest{% endif %}</h4>
