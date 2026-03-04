@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.shortcuts import redirect, render
+from django.contrib.staticfiles.views import serve as staticfiles_serve
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -50,3 +51,10 @@ else:
     urlpatterns.insert(1, path("accounts/google/login/callback/", social_unavailable))
     urlpatterns.insert(2, path("accounts/google/login/", social_unavailable))
     urlpatterns.insert(3, path("accounts/login/", social_unavailable))
+
+# Production safety net: if PythonAnywhere static mapping is missing/misconfigured,
+# Django can still serve static assets so the UI does not break.
+if not settings.DEBUG:
+    urlpatterns.append(
+        re_path(r"^static/(?P<path>.*)$", staticfiles_serve, {"insecure": True})
+    )
