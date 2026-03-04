@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,3 +19,10 @@ if settings.ALLAUTH_ENABLED:
 
     urlpatterns.insert(1, path("accounts/google/login/callback/", google_callback_entry))
     urlpatterns.insert(2, path("accounts/", include("allauth.urls")))
+else:
+    def social_unavailable(request):
+        return render(request, "socialaccount/unavailable.html", status=503)
+
+    urlpatterns.insert(1, path("accounts/google/login/callback/", social_unavailable))
+    urlpatterns.insert(2, path("accounts/google/login/", social_unavailable))
+    urlpatterns.insert(3, path("accounts/login/", social_unavailable))

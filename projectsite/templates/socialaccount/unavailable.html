@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Social Login Unavailable | PSUSphere</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fc;
+      }
+      .card-box {
+        max-width: 700px;
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card-box text-center">
+      <h3 class="mb-3">Social Login Is Not Enabled On This Server</h3>
+      <p class="text-muted mb-4">
+        The `/accounts/` routes are unavailable because `django-allauth` is not active in the current Python environment.
+      </p>
+      <div class="alert alert-warning text-start">
+        <strong>Server fix required:</strong> install dependencies from `requirements.txt`, reload the web app, and verify `allauth` is in `INSTALLED_APPS`.
+      </div>
+      <a href="/admin/login/" class="btn btn-primary">Go to Admin Login</a>
+    </div>
+  </body>
+</html>
