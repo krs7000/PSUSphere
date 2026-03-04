@@ -37,10 +37,10 @@
                 </form>
                 <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
                     <li class="nav-item dropdown hidden-caret">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <a id="emailDropdownToggle" class="nav-link dropdown-toggle" href="#" aria-expanded="false">
                             <i class="la la-envelope-o"></i>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul id="emailDropdownMenu" class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Action</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li><div class="dropdown-divider"></div></li>
@@ -48,11 +48,11 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown hidden-caret">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <a id="notifDropdownToggle" class="nav-link dropdown-toggle" href="#" aria-expanded="false">
                             <i class="la la-bell-o"></i>
                             <span class="notification">3</span>
                         </a>
-                        <ul class="dropdown-menu notif-box">
+                        <ul id="notifDropdownMenu" class="dropdown-menu notif-box">
                             <li>
                                 <div class="dropdown-title">You have 4 new notification</div>
                             </li>
@@ -96,11 +96,11 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <a id="profileDropdownToggle" class="dropdown-toggle profile-pic" href="#" aria-expanded="false">
                             <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
                             <span>{% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Guest{% endif %}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-user">
+                        <ul id="profileDropdownMenu" class="dropdown-menu dropdown-user">
                             <li>
                                 <div class="user-box">
                                     <div class="u-img">
@@ -222,4 +222,46 @@
 <script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
 <script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
 <script src="{% static 'js/ready.min.js' %}"></script>
+<script>
+  (function () {
+    var pairs = [
+      { toggleId: "emailDropdownToggle", menuId: "emailDropdownMenu" },
+      { toggleId: "notifDropdownToggle", menuId: "notifDropdownMenu" },
+      { toggleId: "profileDropdownToggle", menuId: "profileDropdownMenu" }
+    ];
+
+    function closeAll(exceptMenuId) {
+      pairs.forEach(function (pair) {
+        var menu = document.getElementById(pair.menuId);
+        var toggle = document.getElementById(pair.toggleId);
+        if (!menu || menu.id === exceptMenuId) return;
+        menu.classList.remove("show");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    pairs.forEach(function (pair) {
+      var toggle = document.getElementById(pair.toggleId);
+      var menu = document.getElementById(pair.menuId);
+      if (!toggle || !menu) return;
+
+      toggle.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var willOpen = !menu.classList.contains("show");
+        closeAll(pair.menuId);
+        menu.classList.toggle("show", willOpen);
+        toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      });
+
+      menu.addEventListener("click", function (event) {
+        event.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", function () {
+      closeAll();
+    });
+  })();
+</script>
 </html>
