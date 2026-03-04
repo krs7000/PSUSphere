@@ -1,0 +1,60 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Social Login Error | PSUSphere</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f8f9fc;
+      }
+      .auth-card {
+        max-width: 620px;
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+      .icon-wrap {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #fff3cd;
+        color: #8a6d3b;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-card text-center">
+      <div class="icon-wrap mb-3">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3 class="mb-2">Third-Party Login Failure</h3>
+      <p class="text-muted mb-3">
+        We could not finish signing you in with your social account.
+      </p>
+      <p class="small text-muted mb-4">
+        This usually happens when the Google app setup, redirect URL, or test-user access is not complete.
+      </p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a href="{% url 'account_login' %}" class="btn btn-primary">Back to Login</a>
+        <a href="/" class="btn btn-outline-secondary">Go to Home</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -10,15 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
+import socket
 from pathlib import Path
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG_ENV = os.environ.get("DEBUG")
+IS_PYTHONANYWHERE = "pythonanywhere" in socket.gethostname().lower()
+if IS_PYTHONANYWHERE:
+    DEBUG = bool(DEBUG_ENV and DEBUG_ENV.strip().lower() in {"1", "true", "yes", "on"})
+else:
+    # Always keep debug on for local development so admin static assets load.
+    DEBUG = True
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         "ALLOWED_HOSTS",
-        "127.0.0.1,localhost,baterricho.pythonanywhere.com,.pythonanywhere.com",
+        "127.0.0.1,localhost,psusphere.pythonanywhere.com,baterricho.pythonanywhere.com,.pythonanywhere.com",
     ).split(",")
     if host.strip()
 ]
@@ -174,7 +181,8 @@ LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-SITE_ID = int(os.environ.get("SITE_ID", "1"))
+DEFAULT_SITE_ID = 2 if "pythonanywhere" in socket.gethostname().lower() else 1
+SITE_ID = int(os.environ.get("SITE_ID", str(DEFAULT_SITE_ID)))
 
 if ALLAUTH_ENABLED:
     LOGIN_URL = "/accounts/login/"
@@ -183,6 +191,7 @@ if ALLAUTH_ENABLED:
     ACCOUNT_LOGOUT_REDIRECT_URL = "/"
     ACCOUNT_LOGIN_METHODS = {"username", "email"}
     ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
+    SOCIALACCOUNT_LOGIN_ON_GET = True
 
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
