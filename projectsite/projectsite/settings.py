@@ -31,6 +31,15 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS",
+        "http://127.0.0.1,http://localhost,https://baterricho.pythonanywhere.com,https://psusphere.pythonanywhere.com",
+    ).split(",")
+    if origin.strip()
+]
+
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
 USE_SETTINGS_GOOGLE_APP_ENV = os.environ.get("USE_SETTINGS_GOOGLE_APP")
